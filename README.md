@@ -1,37 +1,51 @@
-# Verenigingenkaart Friesland (Streamlit)
+# Verenigingenkaart Friesland — Google Maps (static site)
 
-Kaart-app om verenigingen/klanten in **Friesland** te visualiseren en te filteren op **gemeente** en **sport** (of je eigen parameters).
+Plot NL-postcodes (Friesland) op **Google Maps** vanuit een **Excel/CSV upload**. Pins zijn filterbaar op **Gemeente** en **Sport**, en je kunt zoeken op vereniging/plaats/postcode.
 
-## ✅ Features
-- Upload **CSV of Excel** met kolommen: `Vereniging, sport, bond, adres, postcode, plaats, gemeente`
-- Automatisch coördinaten via **pgeocode** (pc4-centroid)
-- Filter op **Gemeente** en **Sport**, plus zoekbalk (vereniging/plaats/postcode)
-- Interactieve kaart (OpenStreetMap) met popups
-- Download **gefilterde CSV**
+## 🚀 Snel starten
+1. **Download of clone** deze repo en open de map.
+2. Maak een kopie van `config.example.js` → **`config.js`** en vul je **Google Maps API key** in.
+   - Beperk de key op **HTTP referers** (bijv. `http://localhost/*` en `https://<jouw-user>.github.io/*`).
+   - Beperk de API's tot **Maps JavaScript API** en **Geocoding API**.
+3. Open **`index.html`** lokaal (of host via GitHub Pages) en:
+   - Upload je CSV/Excel **óf** klik op **Laad demo-data**.
 
-## 🚀 Lokale installatie
-```bash
-pip install -r requirements.txt
-streamlit run streamlit_app.py
+> De app geocodeert postcodes client-side via de Google Geocoding API (met caching in `localStorage`).
+
+## 🗂️ Bestanden
+- `index.html` — UI en containers
+- `styles.css` — eenvoudige styling
+- `app.js` — logica (upload/parsen, geocoding, markers, filters, caching)
+- `config.example.js` — voorbeeld om je **API key** te zetten (kopieer naar `config.js`)
+- `data/sportverenigingen_friesland_dummy.csv` — demo-dataset (100 rijen, echte Friese postcodes)
+- `.gitignore` — sluit `config.js` uit je commits
+
+## 🔑 Google Maps API key (belangrijk)
+- **Billing** en API key verplicht voor Geocoding. Zie Google’s docs: gebruiksuitgaven & key aanmaken/beperken.
+- Officiële stappen: enable **Geocoding API**, maak key en beperk ‘m.  
+  - Usage/billing: https://developers.google.com/maps/documentation/geocoding/usage-and-billing  
+  - Get API key & enable API: https://developers.google.com/maps/documentation/geocoding/get-api-key  
+  - Key restricties: https://cloud.google.com/docs/authentication/api-keys
+
+## 📦 GitHub Pages
+Je kunt deze statische site zo hosten op **GitHub Pages**:
+- Docs: https://pages.github.com/ of Quickstart: https://docs.github.com/en/pages/quickstart
+
+## 🔍 Dataformat
+Vereiste kolommen (exacte kolomnamen):
 ```
-Open de link die Streamlit toont (meestal `http://localhost:8501`).
+Vereniging, sport, bond, adres, postcode, plaats, gemeente
+```
+- Postcode mag `1234 AB` of `1234AB`. De app normaliseert naar `1234 AB` en geocodeert in **Nederland**.
+- We tonen alles met coördinaten; je kunt desgewenst Friesland-only afdwingen via filters.
 
-## ☁️ Streamlit Cloud
-1. Push deze repo naar GitHub
-2. Ga naar https://share.streamlit.io/ en koppel je repo
-3. Kies `streamlit_app.py` als entrypoint
-4. (Optioneel) Zet **demo-data** aan in de sidebar
+## ⚙️ Tips
+- **Caching**: geocode-resultaten worden lokaal opgeslagen per `postcode|plaats`. Herladen is daarna sneller en goedkoper.
+- **Throttling**: we limiteren tot ~5 requests/sec om spikes en limieten te vermijden.
+- **Datakwaliteit**: voeg waar mogelijk **plaats** en **gemeente** toe om ambiguïteit te beperken.
 
-## 📁 Data
-- Demo-bestand staat in `data/sportverenigingen_friesland_dummy.csv`
-- Eigen bestand moet minimaal deze kolommen hebben:
-  - `Vereniging, sport, bond, adres, postcode, plaats, gemeente`
-
-> Tip: Gebruik volledige NL-postcodes (bijv. `9203 AA`). Voor geocoding wordt de 4-cijferige pc (`9203`) gebruikt (centroid).
-
-## 🛠️ Aanpassen
-- Extra filters toevoegen? Voeg kolommen toe in je CSV en breid de filtersectie in `streamlit_app.py` uit.
-- Kleurcodering of gemeentegrenzen (polygons)? Folium ondersteunt dit makkelijk — geef een seintje als je een voorbeeld wilt.
-
-## 🔒 Privacy
-Alle verwerking is client-side; er is geen externe database of API nodig.
+## 🧱 Roadmap (optioneel)
+- Marker-clustering
+- Kleuren per sport/bond
+- FR-gemeente-grenzen (GeoJSON) + click-to-filter
+- Export van gefilterde set

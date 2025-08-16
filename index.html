@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verenigingenkaart Friesland — Google Maps</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Verenigingenkaart Friesland</h1>
+    <p>Upload een Excel/CSV met: <code>Vereniging, sport, bond, adres, postcode, plaats, gemeente</code>. Pins worden op postcode geplot (NL).</p>
+  </header>
+
+  <section class="controls">
+    <div class="control">
+      <label for="file">Upload CSV of Excel</label>
+      <input id="file" type="file" accept=".csv,.xlsx,.xls" />
+      <button id="use-demo" type="button">Laad demo-data</button>
+    </div>
+    <div class="control">
+      <div class="status" id="status">Nog geen bestand geladen.</div>
+      <div class="progress" id="progress" hidden>
+        <div class="bar" id="bar"></div>
+      </div>
+    </div>
+    <div class="filters">
+      <div>
+        <label>Gemeente</label>
+        <select id="filter-gemeente" multiple></select>
+      </div>
+      <div>
+        <label>Sport</label>
+        <select id="filter-sport" multiple></select>
+      </div>
+      <div>
+        <label>Zoek (vereniging/plaats/postcode)</label>
+        <input id="filter-q" type="text" placeholder="Typ om te zoeken…" />
+      </div>
+      <div class="chips">
+        <span id="count-total" class="chip">Totaal: 0</span>
+        <span id="count-visible" class="chip chip-primary">Zichtbaar: 0</span>
+        <button id="reset-filters" type="button" class="secondary">Reset filters</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="map-wrap">
+    <div id="map"></div>
+  </section>
+
+  <footer>
+    <small>Tip: zet je Google Maps API key in <code>config.js</code> (kopie van <code>config.example.js</code>) en beperk 'm op referer (localhost + GitHub Pages domein) en op Maps JavaScript + Geocoding APIs.</small>
+  </footer>
+
+  <!-- Config with API key (create your own config.js from config.example.js) -->
+  <script src="config.js"></script>
+  <!-- SheetJS for Excel/CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.3/dist/xlsx.full.min.js"></script>
+  <!-- Our app -->
+  <script src="app.js"></script>
+</body>
+</html>
